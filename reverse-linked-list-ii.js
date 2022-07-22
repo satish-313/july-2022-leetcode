@@ -55,30 +55,42 @@ const reveseBetween = (head, left, right) => {
 const reveseBetweenii = (head, left, right) => {
   if (left === right) return head;
 
-  let current = head,
-    leftEl = null,
-    rightEl = null,
-    len = 0;
+  let curr = head, prevLeft = null, postRight = null, len = 0;
 
-  while (current !== null) {
+  while (curr) {
     len += 1;
-    if (len === left) leftEl = current;
-    if (len === right) rightEl = current;
-
-    current = current.next;
+    if (len === left - 1) prevLeft = curr; /* previous position of left */
+    if (len === right + 1) postRight = curr; /* next position of right */
+    curr = curr.next;
   }
 
-  let next,
-    prev = leftEl;
-  current = leftEl;
+  const reverse = (curr, head, start, end, time) => {
+    let next,prev = end;
 
-  while(current !== null) {
-    next = current.next;
-    
-  }
+    while (time > 0) {
+      next = curr.next;
+      curr.next = prev;
+      prev = curr;
+      curr = next;
+      time -= 1;
+    }
 
-  return head;
+    if (start) { /* if start is null */
+      start.next = prev;
+      return head;
+    }
+
+    return prev;
+  };
+
+  return reverse(
+    prevLeft ? prevLeft.next : head, /* if left is 1 then prevLeft is null (prevLeft.next will be error) in case send head*/
+    head, /* for sending head after adjustment */
+    prevLeft, /* start point of after reverse */
+    postRight, /* ending point after reverse */
+    right - left + 1 /* number of time req for adjustment */
+  );
 };
 
 print(a);
-print(reveseBetweenii(a, 2, 4));
+print(reveseBetweenii(a, 3, 4));
